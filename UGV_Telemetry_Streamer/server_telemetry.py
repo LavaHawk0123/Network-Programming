@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
     
-from imutask.srv import *
+from sensor_msgs.msg import Imu
 import rospy
 import math
 import numpy as np
     
-def quaternions(req):
+def broadcastIMUData(req):
     PI=3.141593
     pitch = 57.3 * math.atan (req.acc_x/math.sqrt(req.acc_y*req.acc_y + req.acc_z*req.acc_z))
     roll = 57.3 * math.atan (req.acc_y/math.sqrt(req.acc_x*req.acc_x + req.acc_z*req.acc_z))
@@ -25,7 +25,7 @@ def quaternions(req):
    
 def imu_data():
     rospy.init_node('imu_to_quat_server')
-    s = rospy.Service('imu_to_quat', imu, quaternions)
+    sub = rospy.Subscriber('/imu', Imu, broadcastIMUData)	     #Subscriber to the /imu topic
     rospy.spin()
    
 if _name_ == "_main_":
