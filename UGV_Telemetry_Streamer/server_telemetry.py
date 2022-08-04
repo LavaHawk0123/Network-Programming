@@ -5,8 +5,16 @@ from sensor_msgs.msg import Imu
 import rospy
 import math
 import numpy as np
-    
+import socket
+
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((socket.gethostname(), 5555))
+s.listen(5)
+
+
 def broadcastIMUData(req):
+    global s
     PI=3.141593
     pitch = 57.3 * math.atan (req.acc_x/math.sqrt(req.acc_y*req.acc_y + req.acc_z*req.acc_z))
     roll = 57.3 * math.atan (req.acc_y/math.sqrt(req.acc_x*req.acc_x + req.acc_z*req.acc_z))
@@ -20,12 +28,14 @@ def broadcastIMUData(req):
     qy = np.cos(roll/2) * np.sin(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.cos(pitch/2) * np.sin(yaw/2)
     qz = np.cos(roll/2) * np.cos(pitch/2) * np.sin(yaw/2) - np.sin(roll/2) * np.sin(pitch/2) * np.cos(yaw/2)
     qw = np.cos(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
-
-    return imuResponse(qw,qx,qy,qz)
+    msg = str(qw)+str(qx)+str(qy)+str(qz)
+    c, address = s.accept()
+    c.send(bytes(msg),encoding = "utf-8")
+    return (qw,qx,qy,qz)
    
 def imu_data():
     rospy.init_node('imu_to_quat_server')
-    sub = rospy.Subscriber('/imu', Imu, broadcastIMUData)	     #Subscriber to the /imu topic
+    (qw,qx,qy,qz) = rospy.Subscriber('/imu', Imu, broadcastIMUData)	     #Subscriber to the /imu topic
     rospy.spin()
    
 if _name_ == "_main_":
