@@ -10,7 +10,7 @@ from imutask.srv import *
 from std_msgs.msg import Int32, String, Float32MultiArray
 
 def IMU_client():
-    host = '192.168.1.26'
+    host = '127.0.0.1'
     port = 5555
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
