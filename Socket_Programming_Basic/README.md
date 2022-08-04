@@ -8,8 +8,8 @@ git clone https://github.com/LavaHawk0123/Network-Programming.git
   
 ### Open the terminal and run
 ```
-chmod 777 Client.py
-chmod 777 Server.py
+sudo chmod 777 Client.py
+sudo chmod 777 Server.py
 ```
 
 ### Then run:
