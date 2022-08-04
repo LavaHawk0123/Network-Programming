@@ -1,6 +1,7 @@
 Creating a simple client-server architecture using TCP Sockets and python API
 <h1> To run the code</h1>
 Pull the repository into your local system
+
 ```
 git clone https://github.com/LavaHawk0123/Network-Programming.git
 ```
